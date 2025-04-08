@@ -1,0 +1,180 @@
+{% style %}
+  .timeline-section {
+    padding: 60px 0;
+    background-color: #fff;
+  }
+
+  .timeline-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .timeline-title {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: var(--color-text);
+  }
+
+  .timeline-description {
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--color-text-light);
+  }
+
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .timeline-item {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .timeline-image-wrapper {
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 100%;
+  }
+
+  .timeline-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .timeline-week {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--color-text);
+  }
+
+  .timeline-text {
+    color: var(--color-text-light);
+    font-size: 0.95em;
+  }
+
+  @media screen and (max-width: 749px) {
+    .timeline-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<div class="timeline-section">
+  <div class="container">
+    <div class="timeline-header">
+      <h2 class="timeline-title">{{ section.settings.title }}</h2>
+      <p class="timeline-description">{{ section.settings.description }}</p>
+    </div>
+
+    <div class="timeline-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'timeline_item' %}
+          <div class="timeline-item" {{ block.shopify_attributes }}>
+            <div class="timeline-image-wrapper">
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 300 | image_tag:
+                  loading: 'lazy',
+                  class: 'timeline-image',
+                  alt: block.settings.week
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'timeline-image placeholder' }}
+              {% endif %}
+            </div>
+            <h3 class="timeline-week">{{ block.settings.week }}</h3>
+            <p class="timeline-text">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Biodegradation Timeline",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Biodegradation Timeline"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Section Description",
+      "default": "Watch how our products naturally break down and return to the earth, leaving no harmful residues behind."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "timeline_item",
+      "name": "Timeline Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Stage Image"
+        },
+        {
+          "type": "text",
+          "id": "week",
+          "label": "Week Label",
+          "default": "Week 1"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Stage Description",
+          "default": "Initial breakdown begins as natural enzymes start to decompose the material"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Biodegradation Timeline",
+      "blocks": [
+        {
+          "type": "timeline_item",
+          "settings": {
+            "week": "Week 1",
+            "description": "Initial breakdown begins as natural enzymes start to decompose the material"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "week": "Week 2",
+            "description": "Material structure begins to weaken and break apart into smaller pieces"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "week": "Week 4",
+            "description": "Microorganisms continue the decomposition process, further breaking down the material"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "week": "Week 6",
+            "description": "Complete biodegradation achieved, leaving only natural elements that enrich the soil"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %} 
